@@ -1,20 +1,15 @@
 <?php
-/**
- * Created by Philippe Le Van.
- * Date: 04/12/13
- */
-
 namespace Kitpages\SemaphoreBundle\Manager;
 
 interface ManagerInterface
 {
     /**
-     * @param string $key
+     * @param string $semaphoreName
      */
-    public function aquire($key);
+    public function aquire($semaphoreName);
 
     /**
-     * @param string $key
+     * @param string $semaphoreName
      */
-    public function release($key);
+    public function release($semaphoreName);
 } 

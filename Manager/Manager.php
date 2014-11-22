@@ -54,9 +54,9 @@ class Manager
         return $microtime;
     }
 
-    protected function getFileName($key)
+    protected function getFileName($semaphoreName)
     {
-        return $this->fileDirectory.'/'.$key.".csv";
+        return $this->fileDirectory.'/'.$semaphoreName.".csv";
     }
 
     /**
@@ -90,9 +90,9 @@ class Manager
         flock($fp, LOCK_UN);    //Unlock File
         fclose($fp);
     }
-    public function deleteFile($key)
+    public function deleteFile($semaphoreName)
     {
-        @unlink($this->getFileName($key));
+        @unlink($this->getFileName($semaphoreName));
     }
 
     protected function stopwatchStart($message)
@@ -112,16 +112,16 @@ class Manager
     /**
      * @inheritdoc
      */
-    public function aquire($key)
+    public function aquire($semaphoreName)
     {
         $pid = getmypid();
         $locked = true;
-        $this->logger->debug("[$pid] acquire requested, key=$key");
+        $this->logger->debug("[$pid] acquire requested, semaphoreName=$semaphoreName");
         $this->stopwatchStart('aquire_requested');
         // get file pointer
-        if (!is_file($this->getFileName($key))) {
-            file_put_contents($this->getFileName($key), $this->generateFileContent(true));
-            $this->logger->debug("[$pid] aquire obtained loopCount=0, key=$key");
+        if (!is_file($this->getFileName($semaphoreName))) {
+            file_put_contents($this->getFileName($semaphoreName), $this->generateFileContent(true));
+            $this->logger->debug("[$pid] aquire obtained loopCount=0, semaphoreName=$semaphoreName");
             $this->stopwatchStop('aquire_requested');
             $this->stopwatchStart('aquire_obtained');
             return;
@@ -129,7 +129,7 @@ class Manager
         $loopCount = 0;
 
         while ($locked == true) {
-            $fp = fopen($this->getFileName($key), "r+");
+            $fp = fopen($this->getFileName($semaphoreName), "r+");
             if (!flock($fp, LOCK_EX)) {
                 throw new \RuntimeException("kitpages_semaphore, [$pid] flock failed");
             }
@@ -150,7 +150,7 @@ class Manager
 
             } elseif ($locked == false) {
                 $this->writeAndClose($fp, $this->generateFileContent(true));
-                $this->logger->debug("[$pid] aquire obtained, loopCount=$loopCount, key=$key");
+                $this->logger->debug("[$pid] aquire obtained, loopCount=$loopCount, semaphoreName=$semaphoreName");
                 $this->stopwatchStop('aquire_requested');
                 $this->stopwatchStart('aquire_obtained');
                 return;
@@ -165,10 +165,10 @@ class Manager
     /**
      * @inheritdoc
      */
-    public function release($key)
+    public function release($semaphoreName)
     {
         $pid = getmypid();
-        $fp = fopen($this->getFileName($key), "r+");
+        $fp = fopen($this->getFileName($semaphoreName), "r+");
         if (!flock($fp, LOCK_EX)) {
             throw new \RuntimeException("kitpages_semaphore, [$pid] flock failed");
         }
@@ -181,7 +181,7 @@ class Manager
             $this->logger->warning("[$pid] Realease requested, but semaphore not locked, at ".$now->format(DATE_RFC2822)." in ".$backtrace["file"].'('.$backtrace["line"].')');
         }
         $this->writeAndClose($fp, $this->generateFileContent(false));
-        $this->logger->debug("[$pid] release ok, key=$key");
+        $this->logger->debug("[$pid] release ok, semaphoreName=$semaphoreName");
         $this->stopwatchStop('aquire_obtained');
         return;
     }
