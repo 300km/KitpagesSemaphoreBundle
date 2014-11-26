@@ -46,12 +46,12 @@ class OrderingTest extends CommandTestCase
     public function testOrdering()
     {
         $logFile = "/tmp/kitpages_semaphore_phpunit.log";
-        $nbProcess = 9;
+        $nbProcess = 20;
         @unlink($logFile);
         $processList = array();
         $now = time();
         for ($i = 1 ; $i <= $nbProcess ; $i++) {
-            $processList["process_$i"] = new Process($this->getCmd('kitpages:semaphore:aquire', $i).' >> '.$logFile);
+            $processList["process_$i"] = new Process($this->getCmd('kitpages:semaphore:aquire', $i % 10).' >> '.$logFile);
             $processList["process_$i"]->start();
         }
         sleep(1);
@@ -62,5 +62,7 @@ class OrderingTest extends CommandTestCase
         sleep(1);
         $content = file_get_contents($logFile);
         $this->assertEquals($nbProcess, strlen($content));
+        $this->assertEquals("12345678901234567890", $content);
+        echo $content;
     }
 }

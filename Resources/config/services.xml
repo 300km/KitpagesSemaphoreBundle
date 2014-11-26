@@ -6,6 +6,8 @@
 
     <parameters>
         <parameter key="kitpages_semaphore.manager.class">Kitpages\SemaphoreBundle\Manager\Manager</parameter>
+        <parameter key="kitpages_semaphore.semaphore_manager.class">Kitpages\SemaphoreBundle\Semaphore\SemaphoreManager</parameter>
+        <parameter key="kitpages_semaphore.transaction_manager.class">Kitpages\SemaphoreBundle\Transaction\TransactionManager</parameter>
     </parameters>
 
     <services>
@@ -17,6 +19,21 @@
             <argument type="service" id="debug.stopwatch" on-invalid="null" />
             <tag name="monolog.logger" channel="kitpages_semaphore"/>
         </service>
+
+        <service id="kitpages_semaphore.semaphore_manager" class="%kitpages_semaphore.semaphore_manager.class%">
+            <argument type="service" id="kitpages_semaphore.transaction_manager"/>
+            <argument>%kitpages_semaphore.sleep_time_microseconds%</argument>
+            <argument>%kitpages_semaphore.dead_lock_microseconds%</argument>
+            <argument type="service" id="logger"/>
+            <argument type="service" id="debug.stopwatch" on-invalid="null" />
+            <tag name="monolog.logger" channel="kitpages_semaphore"/>
+        </service>
+
+        <service id="kitpages_semaphore.transaction_manager" class="%kitpages_semaphore.transaction_manager.class%">
+            <argument>%kernel.root_dir%/data/kitpages_semaphore</argument>
+            <argument type="service" id="logger"/>
+        </service>
+
     </services>
 
 </container>

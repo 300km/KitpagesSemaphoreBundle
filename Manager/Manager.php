@@ -114,10 +114,18 @@ class Manager
      */
     public function aquire($semaphoreName)
     {
+
+
+        // if aquiredRow is empty and first row is empty => setAquiredRow
+
+        // elseif acquiredRow
+
         $pid = getmypid();
         $locked = true;
         $this->logger->debug("[$pid] acquire requested, semaphoreName=$semaphoreName");
         $this->stopwatchStart('aquire_requested');
+
+
         // get file pointer
         if (!is_file($this->getFileName($semaphoreName))) {
             file_put_contents($this->getFileName($semaphoreName), $this->generateFileContent(true));
