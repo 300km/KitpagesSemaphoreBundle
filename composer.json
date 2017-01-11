@@ -1,7 +1,7 @@
 {
-    "name": "kitpages/semaphore-bundle",
+    "name": "300km/semaphore-bundle",
     "type": "symfony-bundle",
-    "description": "This is a Symfony2 bundle that provides a semaphore system.",
+    "description": "This is a Symfony3 bundle that provides a semaphore system.",
     "keywords": ["semaphore", "lock"],
     "homepage": "https://github.com/kitpages/KitpagesSemaphoreBundle",
     "license": "MIT",
@@ -13,17 +13,17 @@
     ],
     "require": {
         "php": ">=5.3.2",
-        "symfony/framework-bundle": "~2.3",
-        "symfony/monolog-bundle": "~2.3",
-        "symfony/console": "~2.3"
+        "symfony/framework-bundle": "^3.0",
+        "symfony/monolog-bundle": "^3.0",
+        "symfony/console": "^3.0"
     },
     "require-dev": {
-        "symfony/class-loader": "~2.3",
-        "symfony/yaml": "~2.3",
-        "symfony/finder": "~2.3",
-        "symfony/browser-kit": "~2.3",
-        "symfony/process": "~2.4",
-        "phpunit/phpunit": "~3.7"
+        "symfony/class-loader": "^3.0",
+        "symfony/yaml": "^3.0",
+        "symfony/finder": "^3.0",
+        "symfony/browser-kit": "^3.0",
+        "symfony/process": "^3.0",
+        "phpunit/phpunit": "^4.0"
     },
     "autoload": {
         "psr-0": {
